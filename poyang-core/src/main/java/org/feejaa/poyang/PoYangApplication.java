@@ -25,7 +25,7 @@ public class PoYangApplication {
         }
         init(tempConfig);
     }
-
+// test
     public static PoYangConfig getRpcConfig() {
         if (poYangConfig == null) {
             synchronized (PoYangApplication.class) {
