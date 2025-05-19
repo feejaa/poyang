@@ -15,7 +15,7 @@ public class PoYangApplication {
         log.info("init poyang rpc framework success={}", poYangConfig);
     }
 
-    public static void init() {
+    private static void init() {
         PoYangConfig tempConfig;
         try {
             tempConfig = ConfigUtils.loadConfig(PoYangConfig.class, RpcConstant.DEFAULT_CONFIG_PREIFIX);

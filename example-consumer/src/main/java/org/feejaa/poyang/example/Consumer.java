@@ -7,8 +7,6 @@ public class Consumer {
 
     public static void main(String[] args) {
         //test
-
-
         PoYangConfig poYangConfig = ConfigUtils.loadConfig(PoYangConfig.class, "poyang");
         System.out.printf("config" + poYangConfig);
     }
