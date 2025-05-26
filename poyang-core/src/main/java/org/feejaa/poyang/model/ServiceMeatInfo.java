@@ -1,5 +1,7 @@
 package org.feejaa.poyang.model;
 
+import cn.hutool.core.util.StrUtil;
+
 public class ServiceMeatInfo {
 
     /**
@@ -10,7 +12,7 @@ public class ServiceMeatInfo {
     /**
      * 服务版本
      */
-    private String serviceVersion;
+    private String serviceVersion = "1.0";
 
     /**
      * 服务主机
@@ -45,6 +47,13 @@ public class ServiceMeatInfo {
      */
     public String getServiceNodeKey() {
         return String.format("%s/%s:%s", getServiceKey(), serviceHost, servicePort);
+    }
+
+    public String getServiceAddress() {
+        if (!StrUtil.contains(serviceHost, "http")) {
+            return String.format("http://%s:%s", serviceHost, servicePort);
+        }
+        return String.format("%s:%s", serviceHost, servicePort);
     }
 
 }

@@ -3,6 +3,8 @@ package org.feejaa.poyang;
 import lombok.extern.slf4j.Slf4j;
 import org.feejaa.poyang.config.PoYangConfig;
 import org.feejaa.poyang.constant.RpcConstant;
+import org.feejaa.poyang.registry.Registry;
+import org.feejaa.poyang.registry.RegistryFactory;
 import org.feejaa.poyang.utils.ConfigUtils;
 
 @Slf4j
@@ -13,7 +15,13 @@ public class PoYangApplication {
     public static void init(PoYangConfig newPoYangConfig) {
         poYangConfig = newPoYangConfig;
         log.info("init poyang rpc framework success={}", poYangConfig);
+
+        Registry registry = RegistryFactory.getRegistry(poYangConfig.getRegistryConfig().getRegistry());
+        registry.init(poYangConfig.getRegistryConfig());
+
+        log.info("register init success = {}", registry);
     }
+
 
     private static void init() {
         PoYangConfig tempConfig;
