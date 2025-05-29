@@ -4,9 +4,7 @@ import org.feejaa.poyang.model.User;
 
 public interface UserService {
 
-    User getUser(User user);
-
-    void setUser(User user);
+    User getUser();
 
     default int getUserCount() {
         return 1;

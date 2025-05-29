@@ -7,8 +7,10 @@ import org.feejaa.poyang.config.RegistryConfig;
 import org.feejaa.poyang.model.ServiceMetaInfo;
 import org.feejaa.poyang.model.User;
 import org.feejaa.poyang.proxy.ServiceProxyFacotry;
+import org.feejaa.poyang.registry.LocalRegistry;
 import org.feejaa.poyang.registry.Registry;
 import org.feejaa.poyang.registry.RegistryFactory;
+import org.feejaa.poyang.serializer.SerializerFactory;
 import org.feejaa.poyang.service.UserService;
 
 import java.util.List;
@@ -35,19 +37,11 @@ public class ConsumerExample {
 
         PoYangApplication.init();
 
-        PoYangConfig rpcConfig = PoYangApplication.getRpcConfig();
-        RegistryConfig registryConfig = rpcConfig.getRegistryConfig();
-        Registry registry = RegistryFactory.getRegistry(registryConfig.getRegistryType());
-
-        ServiceMetaInfo serviceMetaInfo = new ServiceMetaInfo();
-        serviceMetaInfo.setServiceName(UserService.class.getName());
-        serviceMetaInfo.setServiceHost(rpcConfig.getPoyang().getServerHost());
-        serviceMetaInfo.setServicePort(rpcConfig.getPoyang().getPort());
-        List<ServiceMetaInfo> serviceMetaInfoList = registry.discover(serviceMetaInfo.getServiceKey());
-
-        log.info("serviceMetaInfoList:{}", serviceMetaInfoList);
-//        ServiceMetaInfo proxy = ServiceProxyFacotry.getProxy(serviceMetaInfoList.get(0).getClass());
+        UserService userService = ServiceProxyFacotry.getProxy(UserService.class);
+        User user = userService.getUser();
+        log.info("user:{}", user);
         // 获得代理信息，发送 http 或者其他方式建连接
+
 
 
     }

@@ -72,6 +72,8 @@ public class EtcdRegistry implements Registry {
      */
     @Override
     public void register(ServiceMetaInfo serviceMetaInfo) throws Exception {
+
+
         // 创建 lease 和 KV 客户端
         Lease leaseClient = client.getLeaseClient();
 

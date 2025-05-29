@@ -1,6 +1,5 @@
 package org.feejaa.poyang.serializer;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.feejaa.poyang.model.RpcRequest;
 import org.feejaa.poyang.model.RpcResponse;
@@ -10,7 +9,7 @@ import java.io.IOException;
 /**
  * JSON序列化工具
  */
-public class JsonSeralizer implements Serializer{
+public class JsonSerializer implements Serializer{
 
     private static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
 

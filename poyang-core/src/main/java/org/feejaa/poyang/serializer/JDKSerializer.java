@@ -6,7 +6,7 @@ import java.io.*;
  * JDK序列化器
  */
 @SuppressWarnings("all")
-public class JDKSeralizer implements Serializer {
+public class JDKSerializer implements Serializer {
 
     @Override
     public <T> byte[] serialize(T obj) throws IOException {

@@ -7,7 +7,7 @@ package org.feejaa.poyang.server;
  * @learn <a href="https://codefather.cn">编程宝典</a>
  * @from <a href="https://yupi.icu">编程导航知识星球</a>
  */
-public interface HttpServer {
+public interface Server {
 
     /**
      * 启动服务器

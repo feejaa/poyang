@@ -56,6 +56,7 @@ public class ServiceMetaInfo {
             return String.format("http://%s:%s", serviceHost, servicePort);
         }
         return String.format("%s:%s", serviceHost, servicePort);
+
     }
 
 }

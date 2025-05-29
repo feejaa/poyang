@@ -11,7 +11,7 @@ import lombok.extern.slf4j.Slf4j;
  * @from <a href="https://yupi.icu">编程导航知识星球</a>
  */
 @Slf4j
-public class VertxHttpServer implements HttpServer {
+public class VertxServer implements Server {
 
     /**
      * 启动服务器
@@ -26,9 +26,11 @@ public class VertxHttpServer implements HttpServer {
         io.vertx.core.http.HttpServer server = vertx.createHttpServer();
 
         // 处理请求
-        server.requestHandler(new HttpServerHandler());
+        server.requestHandler(request -> {
+            new TcpServerHandler();
+        });
 
-        // 启动 HTTP 服务器并监听指定端口
+            // 启动 HTTP 服务器并监听指定端口
         server.listen(port, result -> {
             if (result.succeeded()) {
                 log.info("Server is now listening on port {}", port);

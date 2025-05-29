@@ -18,7 +18,7 @@ public class PoYangConfig {
 
         private String version = "1.0.0";
 
-        private String serverHost = "localhost";
+        private String serverHost = "127.0.0.1";
 
         private Integer port = 8080;
 

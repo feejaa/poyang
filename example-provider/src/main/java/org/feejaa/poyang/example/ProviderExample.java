@@ -3,10 +3,13 @@ package org.feejaa.poyang.example;
 import org.feejaa.poyang.PoYangApplication;
 import org.feejaa.poyang.config.PoYangConfig;
 import org.feejaa.poyang.config.RegistryConfig;
+import org.feejaa.poyang.example.service.UserServiceImpl;
 import org.feejaa.poyang.model.ServiceMetaInfo;
+import org.feejaa.poyang.registry.LocalRegistry;
 import org.feejaa.poyang.registry.Registry;
 import org.feejaa.poyang.registry.RegistryFactory;
-import org.feejaa.poyang.server.VertxHttpServer;
+import org.feejaa.poyang.server.TcpServer;
+import org.feejaa.poyang.server.VertxServer;
 import org.feejaa.poyang.service.UserService;
 
 public class ProviderExample {
@@ -27,12 +30,14 @@ public class ProviderExample {
         serviceMetaInfo.setServicePort(rpcConfig.getPoyang().getPort());
 
         try {
+            LocalRegistry.register(serviceName, UserServiceImpl.class);
+
             registry.register(serviceMetaInfo);
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
-        VertxHttpServer vertxHttpServer = new VertxHttpServer();
-        vertxHttpServer.doStart(rpcConfig.getPoyang().getPort());
+        TcpServer server = new TcpServer();
+        server.doStart(rpcConfig.getPoyang().getPort());
 
     }
 }

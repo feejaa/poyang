@@ -21,6 +21,7 @@ public class HttpServerHandler implements Handler<HttpServerRequest> {
 
     @Override
     public void handle(HttpServerRequest request) {
+        log.info("// 获取请求体: {}",System.currentTimeMillis());
         // 指定序列化器
         final Serializer serializer = SerializerFactory.getInstance(PoYangApplication.getRpcConfig().getPoyang().getSerializer());
 

@@ -1,0 +1,4 @@
+jdk=org.feejaa.poyang.serializer.JDKSerializer
+hessian=org.feejaa.poyang.serializer.HessianSerializer
+json=org.feejaa.poyang.serializer.JsonSerializer
+kryo=org.feejaa.poyang.serializer.KryoSerializer

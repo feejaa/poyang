@@ -2,8 +2,14 @@ package org.feejaa.poyang.proxy;
 
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.lang.Assert;
+import cn.hutool.core.util.IdUtil;
 import cn.hutool.http.HttpRequest;
 import cn.hutool.http.HttpResponse;
+import io.netty.handler.codec.protobuf.ProtobufDecoder;
+import io.vertx.core.Vertx;
+import io.vertx.core.buffer.Buffer;
+import io.vertx.core.net.NetClient;
+import io.vertx.core.net.NetSocket;
 import lombok.extern.slf4j.Slf4j;
 import org.feejaa.poyang.PoYangApplication;
 import org.feejaa.poyang.config.PoYangConfig;
@@ -11,6 +17,7 @@ import org.feejaa.poyang.constant.RpcConstant;
 import org.feejaa.poyang.model.RpcRequest;
 import org.feejaa.poyang.model.RpcResponse;
 import org.feejaa.poyang.model.ServiceMetaInfo;
+import org.feejaa.poyang.protocol.*;
 import org.feejaa.poyang.registry.Registry;
 import org.feejaa.poyang.registry.RegistryFactory;
 import org.feejaa.poyang.serializer.Serializer;
@@ -20,6 +27,7 @@ import java.io.IOException;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
 
 /**
  * 服务代理
@@ -42,11 +50,7 @@ public class ServiceProxy implements InvocationHandler {
                 .parameterTypes(method.getParameterTypes())
                 .args(args)
                 .build();
-
         try {
-            // 序列化
-            byte[] bodyBytes = serializer.serialize(rpcRequest);
-
             // 从注册中心获取服务提供者请求地址
             PoYangConfig rpcConfig = PoYangApplication.getRpcConfig();
             Registry registry = RegistryFactory.getRegistry(rpcConfig.getRegistryConfig().getRegistryType());
@@ -54,21 +58,58 @@ public class ServiceProxy implements InvocationHandler {
             serviceMetaInfo.setServiceName(serviceName);
             serviceMetaInfo.setServiceVersion(RpcConstant.DEFAULT_SERVICE_VERSION);
             List<ServiceMetaInfo> serviceMetaInfoList = registry.discover(serviceMetaInfo.getServiceKey());
+
             Assert.isTrue(CollUtil.isNotEmpty(serviceMetaInfoList), "服务未注册");
+
             ServiceMetaInfo serviceMeta = serviceMetaInfoList.get(0);
+            log.info("serviceMetaInfoList = {}", serviceMetaInfoList);
             // 此处可以实现负载均衡 todo
 
-            // 发送请求
-            HttpResponse response = HttpRequest.post(serviceMeta.getServiceAddress())
-                    .body(bodyBytes).execute();
-            byte[] result = response.bodyBytes();
-            // 反序列化
-            RpcResponse rpcResponse = serializer.deserialize(result, RpcResponse.class);
+            // 发送TCP请求
+            Vertx vertx = Vertx.vertx();
+            NetClient netClient = vertx.createNetClient();
+            CompletableFuture<RpcResponse> responseFuture = new CompletableFuture<>();
+            netClient.connect(serviceMeta.getServicePort(), serviceMeta.getServiceHost(),
+                    result -> {
+                        if (!result.succeeded()) {
+                            throw new RuntimeException("connect to TCP Server failed");
+                        }
+                        log.info("connect to TCP Server success");
+                        NetSocket soucket = result.result();
+                        ProtocolMessage<RpcRequest> protocolMessage = new ProtocolMessage<>();
+                        ProtocolMessage.Header header = new ProtocolMessage.Header();
+                        header.setMagic(ProtocolConstant.PROTOCOL_MAGIC);
+                        header.setVersion(ProtocolConstant.PROTOCOL_VERSION);
+                        header.setSerializer((byte) ProtocolMessageSerializerEnum.getEnumByValue(PoYangApplication.getRpcConfig().getPoyang().getSerializer()).getKey());
+                        header.setType((byte) ProtocolMessageTypeEnum.REQUEST.getKey());
+                        header.setRequestId(IdUtil.getSnowflakeNextId());
+                        protocolMessage.setHeader(header);
+                        protocolMessage.setBody(rpcRequest);
 
-            return rpcResponse.getData();
-        } catch (IOException e) {
+                        try {
+                            Buffer encode = ProtocolMessageEncoder.encode(protocolMessage);
+                            soucket.write(encode);
+                        } catch (IOException e) {
+                            throw new RuntimeException("encode failed");
+                        }
+                        soucket.handler(buffer -> {
+                            try {
+                                ProtocolMessage<RpcResponse> protocolMessageResponse = (ProtocolMessage<RpcResponse>) ProtocolMessageDecoder.decode(buffer);
+                                responseFuture.complete(protocolMessageResponse.getBody());
+                            } catch (IOException e) {
+                                throw new RuntimeException(e);
+                            }
 
+                        });
 
+                    }
+            );
+            RpcResponse response = responseFuture.get();
+            netClient.close();
+
+            return response.getData();
+        } catch (Exception e) {
+            log.error("err", e);
             throw new RuntimeException(e.getMessage());
         }
     }

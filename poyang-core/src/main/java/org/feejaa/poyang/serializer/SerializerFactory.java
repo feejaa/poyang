@@ -2,8 +2,6 @@ package org.feejaa.poyang.serializer;
 
 import org.feejaa.poyang.spi.SpiLoader;
 
-import java.util.HashMap;
-
 public class SerializerFactory {
 
 
@@ -17,7 +15,7 @@ public class SerializerFactory {
     /**
      * 默认序列化器
      */
-    public static final Serializer DEFAULT_SERIALIZER = new JDKSeralizer();
+    public static final Serializer DEFAULT_SERIALIZER = new JDKSerializer();
 
     /**
      * 工厂模式
