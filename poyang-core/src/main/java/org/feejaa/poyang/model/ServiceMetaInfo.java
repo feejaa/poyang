@@ -1,8 +1,10 @@
 package org.feejaa.poyang.model;
 
 import cn.hutool.core.util.StrUtil;
+import lombok.Data;
 
-public class ServiceMeatInfo {
+@Data
+public class ServiceMetaInfo {
 
     /**
      * 服务名称

@@ -16,14 +16,17 @@ public class PoYangApplication {
         poYangConfig = newPoYangConfig;
         log.info("init poyang rpc framework success={}", poYangConfig);
 
-        Registry registry = RegistryFactory.getRegistry(poYangConfig.getRegistryConfig().getRegistry());
+        Registry registry = RegistryFactory
+                .getRegistry(poYangConfig.getRegistryConfig().getRegistryType());
         registry.init(poYangConfig.getRegistryConfig());
 
         log.info("register init success = {}", registry);
+
+        Runtime.getRuntime().addShutdownHook(new Thread(registry::destroy));
     }
 
 
-    private static void init() {
+    public static void init() {
         PoYangConfig tempConfig;
         try {
             tempConfig = ConfigUtils.loadConfig(PoYangConfig.class, RpcConstant.DEFAULT_CONFIG_PREIFIX);
