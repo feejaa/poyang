@@ -11,6 +11,7 @@ import org.feejaa.poyang.serializer.SerializerFactory;
 
 import java.io.IOException;
 
+@SuppressWarnings("all")
 @Slf4j
 public class ProtocolMessageDecoder {
 
@@ -18,7 +19,7 @@ public class ProtocolMessageDecoder {
 
         // check magic
         byte magic = buffer.getByte(0);
-        log.info("magic:{}", magic);
+        // check magic
         Assert.isTrue(magic == ProtocolConstant.PROTOCOL_MAGIC, "magic is not equal");
 
         ProtocolMessage.Header header =

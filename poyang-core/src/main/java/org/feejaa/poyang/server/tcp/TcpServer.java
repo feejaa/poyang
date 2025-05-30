@@ -1,8 +1,9 @@
-package org.feejaa.poyang.server;
+package org.feejaa.poyang.server.tcp;
 
 import io.vertx.core.Vertx;
 import io.vertx.core.net.NetServer;
 import lombok.extern.slf4j.Slf4j;
+import org.feejaa.poyang.server.Server;
 
 @Slf4j
 public class TcpServer implements Server {

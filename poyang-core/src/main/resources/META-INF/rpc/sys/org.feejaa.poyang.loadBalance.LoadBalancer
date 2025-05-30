@@ -1,0 +1,3 @@
+roundRobin=org.feejaa.poyang.loadBalance.RoundRobinLoadBalancer
+random=org.feejaa.poyang.loadBalance.RandomLoadBalancer
+consistentHash=org.feejaa.poyang.loadBalance.ConsistentHashLoadBalancer

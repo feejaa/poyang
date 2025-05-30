@@ -8,8 +8,7 @@ import org.feejaa.poyang.model.ServiceMetaInfo;
 import org.feejaa.poyang.registry.LocalRegistry;
 import org.feejaa.poyang.registry.Registry;
 import org.feejaa.poyang.registry.RegistryFactory;
-import org.feejaa.poyang.server.TcpServer;
-import org.feejaa.poyang.server.VertxServer;
+import org.feejaa.poyang.server.tcp.TcpServer;
 import org.feejaa.poyang.service.UserService;
 
 public class ProviderExample {
