@@ -6,11 +6,11 @@ package org.feejaa.poyang.loadBalance;
  */
 public interface LoadBalancerKey {
 
-    String ROUND_ROBIN = "RoundRobin";
+    String ROUND_ROBIN = "roundRobin";
 
-    String RANDOM = "Random";
+    String RANDOM = "random";
 
-    String CONSISTENT_HASH = "ConsistentHash";
+    String CONSISTENT_HASH = "consistentHash";
 
     String LeastConnections = "LeastConnections";
 }

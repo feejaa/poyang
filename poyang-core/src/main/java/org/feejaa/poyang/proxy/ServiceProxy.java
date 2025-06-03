@@ -14,6 +14,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.feejaa.poyang.PoYangApplication;
 import org.feejaa.poyang.config.PoYangConfig;
 import org.feejaa.poyang.constant.RpcConstant;
+import org.feejaa.poyang.loadBalance.LoadBalancerFactory;
 import org.feejaa.poyang.model.RpcRequest;
 import org.feejaa.poyang.model.RpcResponse;
 import org.feejaa.poyang.model.ServiceMetaInfo;
@@ -27,6 +28,7 @@ import org.feejaa.poyang.server.tcp.TcpClient;
 import java.io.IOException;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
+import java.util.HashMap;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 
@@ -62,8 +64,11 @@ public class ServiceProxy implements InvocationHandler {
 
             Assert.isTrue(CollUtil.isNotEmpty(serviceMetaInfoList), "服务未注册");
 
-            ServiceMetaInfo serviceMeta = serviceMetaInfoList.get(0);
             // 此处可以实现负载均衡 todo
+            HashMap<String, Object> requestParams = new HashMap<>();
+            requestParams.put("methodName", rpcRequest.getMethodName());
+            ServiceMetaInfo serviceMeta  = LoadBalancerFactory.getInstance
+                    (rpcConfig.getPoyang().getLoadBalancer()).select(requestParams, serviceMetaInfoList);
 
             RpcResponse rpcResponse = TcpClient.doRequest(rpcRequest, serviceMeta);
 

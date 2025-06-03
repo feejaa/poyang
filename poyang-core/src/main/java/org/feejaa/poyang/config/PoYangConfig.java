@@ -1,6 +1,7 @@
 package org.feejaa.poyang.config;
 
 import lombok.Data;
+import org.feejaa.poyang.loadBalance.LoadBalancerKey;
 import org.feejaa.poyang.serializer.SerializerKeys;
 
 /**
@@ -25,6 +26,8 @@ public class PoYangConfig {
         private boolean isMock = false;
 
         private String serializer = SerializerKeys.JDK;
+
+        private String loadBalancer = LoadBalancerKey.RANDOM;
     }
 
     /**
