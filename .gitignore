@@ -11,6 +11,7 @@ target/
 *.iws
 *.iml
 *.ipr
+.idea/
 
 ### Eclipse ###
 .apt_generated
@@ -33,6 +34,6 @@ build/
 
 ### VS Code ###
 .vscode/
-
+/.idea/
 ### Mac OS ###
 .DS_Store
