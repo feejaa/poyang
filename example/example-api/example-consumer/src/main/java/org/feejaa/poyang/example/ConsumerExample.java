@@ -2,6 +2,7 @@ package org.feejaa.poyang.example;
 
 import lombok.extern.slf4j.Slf4j;
 import org.feejaa.poyang.PoYangApplication;
+import org.feejaa.poyang.bootstrap.ConsumerBootstrap;
 import org.feejaa.poyang.config.PoYangConfig;
 import org.feejaa.poyang.config.RegistryConfig;
 import org.feejaa.poyang.model.ServiceMetaInfo;
@@ -20,7 +21,7 @@ public class ConsumerExample {
 
     public static void main(String[] args) {
 
-        PoYangApplication.init();
+        ConsumerBootstrap.init();
 
         UserService userService = ServiceProxyFacotry.getProxy(UserService.class);
         User user = userService.getUser();

@@ -1,42 +1,30 @@
 package org.feejaa.poyang.example;
 
 import org.feejaa.poyang.PoYangApplication;
+import org.feejaa.poyang.bootstrap.ProviderBootStrap;
 import org.feejaa.poyang.config.PoYangConfig;
 import org.feejaa.poyang.config.RegistryConfig;
 import org.feejaa.poyang.example.service.UserServiceImpl;
 import org.feejaa.poyang.model.ServiceMetaInfo;
+import org.feejaa.poyang.model.ServiceRegisterInfo;
 import org.feejaa.poyang.registry.LocalRegistry;
 import org.feejaa.poyang.registry.Registry;
 import org.feejaa.poyang.registry.RegistryFactory;
 import org.feejaa.poyang.server.tcp.TcpServer;
 import org.feejaa.poyang.service.UserService;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class ProviderExample {
 
     public static void main(String[] args) {
 
-        PoYangApplication.init();
-
-        String serviceName = UserService.class.getName();
-
-        PoYangConfig rpcConfig = PoYangApplication.getRpcConfig();
-        RegistryConfig registryConfig = rpcConfig.getRegistryConfig();
-        Registry registry = RegistryFactory.getRegistry(registryConfig.getRegistryType());
-
-        ServiceMetaInfo serviceMetaInfo = new ServiceMetaInfo();
-        serviceMetaInfo.setServiceName(serviceName);
-        serviceMetaInfo.setServiceHost(rpcConfig.getPoyang().getServerHost());
-        serviceMetaInfo.setServicePort(rpcConfig.getPoyang().getPort());
-
-        try {
-            LocalRegistry.register(serviceName, UserServiceImpl.class);
-
-            registry.register(serviceMetaInfo);
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
-        TcpServer server = new TcpServer();
-        server.doStart(rpcConfig.getPoyang().getPort());
+        List<ServiceRegisterInfo<?>> serviceRegisterInfos = new ArrayList<>();
+        ServiceRegisterInfo<UserServiceImpl> serviceRegisterInfo = new ServiceRegisterInfo<>(UserService.class.getName(), UserServiceImpl.class);
+        serviceRegisterInfos.add(serviceRegisterInfo);
+        // Initialize the PoYang application
+        ProviderBootStrap.init(serviceRegisterInfos);
 
     }
 }
