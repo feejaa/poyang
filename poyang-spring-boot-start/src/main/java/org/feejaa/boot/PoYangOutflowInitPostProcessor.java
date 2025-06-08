@@ -24,6 +24,7 @@ public class PoYangOutflowInitPostProcessor implements BeanPostProcessor {
         if (declaredAnnotation == null) {
             return BeanPostProcessor.super.postProcessAfterInitialization(bean, beanName);
         }
+        log.info("Found PoYangOutflow annotation on bean: {}", beanName);
         // 不为空则为服务提供方
         // 1、获取服务基本信息
         Class<?> interfaceClass = declaredAnnotation.interfaceClass();

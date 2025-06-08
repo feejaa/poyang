@@ -1,5 +1,15 @@
 package org.feejaa.base;
 
+import org.feejaa.boot.PoYangInflowInitPostProcessor;
+import org.feejaa.boot.PoYangInitRegistart;
+import org.feejaa.boot.PoYangOutflowInitPostProcessor;
+import org.springframework.context.annotation.Import;
+
+import java.lang.annotation.*;
+
+@Target({ElementType.TYPE})
+@Retention(RetentionPolicy.RUNTIME)
+@Import({PoYangInflowInitPostProcessor.class, PoYangOutflowInitPostProcessor.class, PoYangInitRegistart.class})
 public @interface EnablePoYang {
 
     /**

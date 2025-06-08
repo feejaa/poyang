@@ -61,17 +61,21 @@ public class ServiceProxy implements InvocationHandler {
             serviceMetaInfo.setServiceName(serviceName);
             serviceMetaInfo.setServiceVersion(RpcConstant.DEFAULT_SERVICE_VERSION);
             List<ServiceMetaInfo> serviceMetaInfoList = registry.discover(serviceMetaInfo.getServiceKey());
-
-            Assert.isTrue(CollUtil.isNotEmpty(serviceMetaInfoList), "服务未注册");
-
+            log.info("serviceMetaInfoList = {}", serviceMetaInfoList);
+            if (CollUtil.isEmpty(serviceMetaInfoList)) {
+                System.out.printf("服务未注册: %s%n", serviceMetaInfo);
+                log.error("服务未注册: {}", serviceMetaInfo);
+                throw new RuntimeException("服务未注册");
+            }
+            log.info("服务继续提供者列表: {}", serviceMetaInfoList);
             // 此处可以实现负载均衡 todo
             HashMap<String, Object> requestParams = new HashMap<>();
             requestParams.put("methodName", rpcRequest.getMethodName());
             ServiceMetaInfo serviceMeta  = LoadBalancerFactory.getInstance
                     (rpcConfig.getPoyang().getLoadBalancer()).select(requestParams, serviceMetaInfoList);
-
+            log.info("选择的服务提供者: {}", serviceMeta);
             RpcResponse rpcResponse = TcpClient.doRequest(rpcRequest, serviceMeta);
-
+            log.info("rpcResponse = {}", rpcResponse);
             return rpcResponse.getData();
         } catch (Exception e) {
             log.error("err is = ", e);

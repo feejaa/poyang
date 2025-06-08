@@ -37,10 +37,6 @@ public class EtcdRegistry implements Registry {
      */
     private final Set<String> watchingKeySet = new ConcurrentHashSet<>();
 
-    private Client client;
-
-    private KV kvClient;
-
     /**
      * 本机注册的节点 key 集合（用于维护续期）
      */
@@ -48,6 +44,9 @@ public class EtcdRegistry implements Registry {
 
     private final RegistryServiceCache registryServiceCache = new RegistryServiceCache();
 
+    private Client client;
+
+    private KV kvClient;
 
     // 重写init方法，传入RegistryConfig参数
     @Override
