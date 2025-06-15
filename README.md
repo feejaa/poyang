@@ -1,43 +1,81 @@
-# PoYang RPC框架
+# PoYang RPC 框架
 
 ![License](https://img.shields.io/github/license/alibaba/dubbo.svg)
-![](https://img.shields.io/badge/Github-181717?style=plastic&logo=github&logoColor=white)
-## 项目介绍
-PoYang是一个基于 Java + Etcd + Vert.x 的RPC 框架，基于对Vert.x网络服务器的学习，以及Java的一些高级特性，其中包括反射、动态代理、序列化器，参考Dubbo、SpringBoot的等框架，基于Etcd和Zookeeper的注册中心、自定义网络协议、动态代理、多种设计模式（单例/工厂/装饰者等）、负载均衡器设计、重试和容错机制、Spring Boot Starter注解驱动开发、依赖注入等，总结实现了一个高性能的RPC框架
+![Github](https://img.shields.io/badge/Github-181717?style=plastic&logo=github&logoColor=white)
 
-该项目总结了自己对RPC框架的理解，是一次从0到1的实践和对自己知识的一场总结
-## 架构
-![](./docs/tutorial.jpg)
-## 技术选型
-主要以 Java 为主，但所有的思想和设计都是可以复用到其他语言的，代码不同罢了。
-- ⭐️ Vert.x 框架（网络通信框架，基于Netty实现）
-- ⭐️ Etcd 云原生存储中间件（jetcd 客户端）
-- ⭐️ SPI 机制
-- ⭐️ 多种序列化器
-    - JSON 序列化
-    - Kryo 序列化
-    - Hessian 序列化
-- ⭐️ 多种设计模式
-    - 双检锁单例模式
-    - 工厂模式
-    - 代理模式
-    - 装饰者模式
-- ⭐️ 负载均衡器设计
-    - 随机负载均衡 
-    - 轮询负载均衡
-    - 加权随机负载均衡(暂未实现)
-- ⭐️ 重试和容错机制（暂未实现完全）
-    - 快速失败（Fast-Fail）
-    - 静默处理（Fast-Safe）
-    - 自动重试（Retry）
-    - 降级（Degrade / Fallback）
-    - 熔断（Circuit Breaker）
-    - 隔离（Bulkhead）
-    - 超时控制（Timeout Control）
-    - 幂等控制（Idempotency）
-- ⭐️ Spring Boot Starter 开发
-## 待拓展点
-- ⭐支持多种类的配置文件形式，例如(xml、properties等)
-- ⭐支持多种类的注册中心，例如(Zookeeper、Consul等)
-- ⭐支持多种类的序列化方式，例如(Avro、Protobuf等)
-- ⭐支持多种类的负载均衡方式，例如(加权轮询、最少连接数等)
+## 📌 项目简介
+
+**PoYang** 是一个基于 **Java + Vert.x + Etcd** 构建的高性能 RPC 框架。它融合了 Dubbo 与 Spring Boot 的设计思想，涵盖了反射、动态代理、SPI 扩展、序列化、负载均衡、容错机制等核心功能，旨在提供一个可扩展、轻量级的微服务通信解决方案。
+
+> 🧠 该项目是对 RPC 底层原理的完整实践，从 0 到 1 独立实现，完善了作为RPC框架的该有基本功能。
+
+---
+
+## ⚙️ 架构图
+
+![架构图](./docs/tutorial.jpg)
+
+---
+
+## 🛠️ 技术选型与功能亮点
+
+### 🔌 网络通信
+
+- 基于 **Vert.x** 实现异步高性能网络通信（底层使用 Netty）
+- 自定义 RPC 协议编解码器
+
+### 🧭 注册中心
+
+- 默认集成 **Etcd**（基于 jetcd）
+- 设计上支持切换至 Zookeeper、Consul 等
+
+### 📦 多种序列化方式（支持 SPI 动态扩展）
+
+- JSON
+- Kryo
+- Hessian
+> ✅ 预留扩展支持：Protobuf、Avro 等
+
+### 🧱 设计模式应用
+
+- 单例模式（双检锁）
+- 工厂模式
+- 代理模式
+- 装饰者模式
+- SPI 插件机制
+
+### 🎯 负载均衡策略
+
+- ✅ 随机负载均衡（Random）
+- ✅ 轮询负载均衡（Round Robin）
+- ⏳ 待实现：
+  - 加权轮询（Weighted Round Robin）
+  - 最少连接数（Least Connections）
+
+### 🛡️ 容错与稳定性设计
+
+部分已实现，部分规划中：
+
+- 快速失败（Fast-Fail）
+- 安全退避（Fast-Safe）
+- 自动重试（Retry）
+- 降级处理（Fallback）
+- 熔断机制（Circuit Breaker）
+- 隔离舱模式（Bulkhead）
+- 超时控制（Timeout Control）
+- 幂等控制（Idempotency）
+
+### 🌱 Spring Boot Starter 支持
+
+- 提供 starter 模块
+- 支持注解驱动：`@PoYangClient`、`@PoYangService`
+- 简化集成与自动化配置
+
+---
+
+## 🔭 待扩展功能
+
+- 支持更多配置文件格式（XML、YAML、Properties）
+- 支持更多注册中心（Zookeeper、Consul）
+- 支持更多序列化方式（Avro、Protobuf）
+- 拓展负载均衡与容错策
